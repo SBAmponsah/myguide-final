@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyGuide — Help</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+<div class="container py-4">
+  <!-- Mobile nav (shown only on small screens) -->
+<div class="d-md-none mb-3">
+  <div class="btn-group w-100" role="group" aria-label="Mobile navigation">
+    <a href="dashboard.html" class="btn btn-outline-secondary">Dashboard</a>
+    <a href="course.html" class="btn btn-outline-secondary">Courses</a>
+    <a href="calendar.html" class="btn btn-outline-secondary">Calendar</a>
+    <a href="profile.html" class="btn btn-outline-secondary">Profile</a>
+    <a href="help.html" class="btn btn-outline-secondary">Help</a>
+  </div>
+</div>
+
+  <!--  Header + Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Help</h2>
+    <a href="dashboard.html" class="btn btn-sm btn-outline-secondary">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+  <!--  Report a Problem -->
+  <section class="mt-4">
+    <h5>Report a Problem</h5>
+    <p class="text-muted">If something doesn’t work as expected, describe the issue below.</p>
+
+    <textarea id="report-problem" class="form-control mb-2" rows="3"
+      placeholder="Describe the issue you encountered..."></textarea>
+
+    <button class="btn btn-outline-primary" onclick="submitFeedback('problem')">
+      Submit
+    </button>
+  </section>
+
+  <!-- Submit a Feature Idea -->
+  <section class="mt-4">
+    <h5>Submit a Feature Idea</h5>
+    <p class="text-muted">Have an idea that could improve MyGuide in the future?</p>
+
+    <textarea id="feature-idea" class="form-control mb-2" rows="3"
+      placeholder="Share your idea..."></textarea>
+
+    <button class="btn btn-outline-success" onclick="submitFeedback('feature')">
+      Submit
+    </button>
+  </section>
+
+  <!-- Project Scope -->
+  <section class="mt-4">
+    <h5>Project Scope & Future Plans</h5>
+    <p class="text-muted">
+      MyGuide is currently a client-side academic planning tool.
+      Future improvements may include deeper analytics, progress tracking,
+      and optional integrations if backend support becomes available.
+    </p>
+  </section>
+
+  <!--  View Submitted Feedback -->
+  <section class="mt-4">
+    <h5>Submitted Feedback</h5>
+    <div id="feedback-list" class="list-group small"></div>
+  </section>
+</div>
+
+<script>
+  const STORAGE_KEY = "myguide_feedback";
+
+  function loadFeedback() {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  }
+
+  function saveFeedback(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  function submitFeedback(type) {
+    const textarea =
+      type === 'problem'
+        ? document.getElementById('report-problem')
+        : document.getElementById('feature-idea');
+
+    const text = textarea.value.trim();
+    if (!text) {
+      alert('Please write something before submitting.');
+      return;
+    }
+
+    const feedback = loadFeedback();
+    feedback.push({
+      type,
+      text,
+      submittedAt: new Date().toISOString()
+    });
+
+    saveFeedback(feedback);
+    textarea.value = '';
+    renderFeedbackList();
+    alert('Submitted successfully ');
+  }
+
+  function renderFeedbackList() {
+    const list = document.getElementById('feedback-list');
+    list.innerHTML = '';
+
+    const feedback = loadFeedback();
+    if (feedback.length === 0) {
+      list.innerHTML = '<div class="text-muted">No submissions yet.</div>';
+      return;
+    }
+
+    feedback.slice().reverse().forEach(f => {
+      const item = document.createElement('div');
+      item.className = 'list-group-item';
+      item.innerHTML = `
+        <strong>${f.type === 'problem' ? 'Problem' : 'Feature Idea'}</strong>
+        <div class="small text-muted">${new Date(f.submittedAt).toLocaleString()}</div>
+        <div>${f.text}</div>
+      `;
+      list.appendChild(item);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', renderFeedbackList);
+</script>
+
+</body>
+</html>

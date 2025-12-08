@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Weekly Planner</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+
+<body class="bg-light">
+<div class="container py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Weekly Planner</h3>
+    <a href="course.html" class="btn btn-outline-secondary">← Back to Course</a>
+  </div>
+
+  <form id="plannerForm" class="card p-4 mb-4">
+    <div class="row g-3">
+
+      <div class="col-md-4">
+        <input required id="taskTitle" class="form-control" placeholder="Task title">
+      </div>
+
+      <div class="col-md-3">
+        <select id="taskType" class="form-select">
+          <option>Assignment</option>
+          <option>Quiz</option>
+          <option>Reading</option>
+          <option>Exam</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <input required type="datetime-local" id="taskDue" class="form-control">
+      </div>
+
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100">Add</button>
+      </div>
+
+    </div>
+  </form>
+
+  <div class="card p-4">
+    <h5>This Week’s Tasks</h5>
+    <div id="weekTasks" class="list-group"></div>
+  </div>
+
+</div>
+
+<script src="scripts/storage.js"></script>
+<script src="scripts/notifications.js"></script>
+<script src="scripts/weekly-planner.js"></script>
+</body>
+</html>

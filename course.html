@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MyGuide — Course</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <style>
+    /* Minimal page-specific styles for a polished look */
+    .course-header {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:1rem;
+    }
+    .course-info { line-height:1; }
+    .course-code { font-weight:700; font-size:1.05rem; }
+    .course-title { color:#555; margin-top:.1rem; }
+    .top-actions > button { margin-left:.5rem; }
+    .full-page {
+      position:fixed; inset:0; background:#fff; z-index:1050; padding:1.5rem; overflow:auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+   .editor-area {
+  min-height: 420px;
+  max-height: 70vh;      /* important */
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  resize: none;
+  overflow-y: auto;      /* allow scrolling */
+  box-sizing: border-box;
+}
+
+ .tag { display:inline-block; padding:.15rem .5rem; border-radius:999px; font-size:.8rem; background:#eee; margin-right:.4rem; }
+    .week-day { min-height:110px; border-radius:8px; padding:.6rem; border:1px dashed #eee; background:#fafafa; }
+    .task-type-badge { font-size:.75rem; padding:.25rem .45rem; border-radius:6px; }
+    .btn-creative { background:linear-gradient(90deg,#7C4DFF,#4D8CFF); color:white; border:0; }
+  </style>
+</head>
+<body>
+<div class="d-flex">
+  <!-- Sidebar -->
+  <nav class="sidebar bg-white border-end p-3" style="min-width:220px">
+    <a href="dashboard.html" class="d-block mb-3">&larr; Back</a>
+    <div id="course-list-compact"></div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="flex-fill p-4">
+    <!-- Mobile nav (shown only on small screens) -->
+<div class="d-md-none mb-3">
+  <div class="btn-group w-100" role="group" aria-label="Mobile navigation">
+    <a href="dashboard.html" class="btn btn-outline-secondary">Dashboard</a>
+    <a href="course.html" class="btn btn-outline-secondary">Courses</a>
+    <a href="calendar.html" class="btn btn-outline-secondary">Calendar</a>
+    <a href="profile.html" class="btn btn-outline-secondary">Profile</a>
+    <a href="help.html" class="btn btn-outline-secondary">Help</a>
+  </div>
+</div>
+
+    <div class="course-header mb-3">
+      <div class="course-info">
+        <div id="course-code" class="course-code">ENG 221</div>
+        <div id="course-name" class="course-title">English Literature II</div>
+      </div>
+
+      <div class="top-actions">
+        <button id="btn-open-notes" class="btn btn-outline-primary">Notes</button>
+        <button id="btn-plan-week" class="btn btn-creative">Plan Week</button>
+      </div>
+    </div>
+
+    <!-- Content area: tabs -->
+    <ul class="nav nav-tabs mb-3" id="courseTabs" role="tablist">
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-overview">Overview</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-assign">Assignments</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-quizzes">Quizzes</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-other">Other</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-notes">Notes</button></li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- Overview -->
+      <div class="tab-pane fade show active" id="tab-overview">
+        <div id="overview-list" class="list-group mb-4"></div>
+      </div>
+
+      <!-- Assignments -->
+      <div class="tab-pane fade" id="tab-assign">
+        <div id="assign-list" class="list-group mb-4"></div>
+      </div>
+
+      <!-- Quizzes -->
+      <div class="tab-pane fade" id="tab-quizzes">
+        <div id="quiz-list" class="list-group mb-4"></div>
+      </div>
+
+      <!-- Other -->
+      <div class="tab-pane fade" id="tab-other">
+        <div id="other-list" class="list-group mb-4"></div>
+      </div>
+
+      <!-- Notes (list) -->
+      <div class="tab-pane fade" id="tab-notes">
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Notes</h5>
+          <button id="btn-new-note" class="btn btn-sm btn-primary">+ New Note</button>
+        </div>
+        <div id="notes-list" class="list-group"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Full-page Note Editor (hidden by default) -->
+<div id="note-editor" class="full-page" style="display:none;">
+  <div class="d-flex justify-content-between mb-3">
+    <h4 id="editor-heading">New Note</h4>
+    <div>
+      <button id="btn-save-note" class="btn btn-creative">Save</button>
+      <button id="btn-cancel-note" class="btn btn-outline-secondary ms-2">Close</button>
+    </div>
+  </div>
+
+  <div class="mb-2">
+    <input id="note-title-input" class="form-control" placeholder="Note title (e.g., Lecture 5 — Themes)"/>
+  </div>
+  <div class="mb-2 d-flex gap-2">
+    <input id="note-date-input" type="date" class="form-control w-auto"/>
+    <select id="note-category" class="form-control w-auto">
+      <option value="Lecture">Lecture</option>
+      <option value="Reading">Reading</option>
+      <option value="Essay">Essay</option>
+      <option value="ExamPrep">Exam prep</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+  <textarea id="note-body" class="editor-area" placeholder="Write or paste your lecture notes, essay, or copy here..."></textarea>
+</div>
+
+<!-- Full-page Weekly Planner -->
+<div id="planner-page" class="full-page" style="display:none;">
+  <div class="d-flex justify-content-between mb-3">
+    <h4>Weekly Planner</h4>
+    <div>
+      <button id="btn-save-week" class="btn btn-creative">Save & Apply</button>
+      <button id="btn-close-week" class="btn btn-outline-secondary ms-2">Close</button>
+    </div>
+  </div>
+
+  <div class="card p-3 mb-3">
+    <div class="d-flex gap-3 align-items-center">
+      <label class="mb-0 fw-bold">Week start (Sunday)</label>
+      <input id="planner-week-start" type="date" class="form-control w-auto" />
+      <div class="ms-auto">
+        <button id="btn-add-week-item" class="btn btn-primary">+ Add Item</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add item modal area inline -->
+  <div id="add-item-area" class="card p-3 mb-3" style="display:none;">
+    <div class="row g-2 align-items-center">
+      <div class="col-md-5">
+        <input id="item-title" class="form-control" placeholder="Title (e.g., Essay due — Act II)" />
+      </div>
+      <div class="col-md-2">
+        <select id="item-type" class="form-control">
+          <option value="Assignment">Assignment</option>
+          <option value="Quiz">Quiz</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <input id="item-date" type="date" class="form-control" />
+      </div>
+      <div class="col-md-2">
+        <input id="item-time" type="time" class="form-control" />
+      </div>
+      <div class="col-md-1 text-end">
+        <button id="btn-add-item-save" class="btn btn-success">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week grid -->
+  <div id="planner-grid" class="row g-3">
+    <!-- JS will render 7 columns -->
+  </div>
+
+  <hr class="my-3"/>
+
+  <h5>Past / Archived Weeks</h5>
+  <div id="archived-weeks" class="list-group"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js"></script>
+
+<!-- Your core app storage + notifications should be loaded BEFORE course.js -->
+<script src="scripts/storage.js"></script>
+<script src="scripts/notifications.js"></script>
+<script src="scripts/course.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>MyGuide — Final Project Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+  <h1>MyGuide — CS 343 Final Project Report</h1>
+
+  <p>
+    <strong>Student(s):</strong> YOUR NAME<br>
+    <strong>Course:</strong> CS 343 — Application Development<br>
+    <strong>Project:</strong> MyGuide (Client-Side Academic Planning Tool)
+  </p>
+
+  <hr>
+
+  <h2>Project Links</h2>
+  <ul>
+    <li>
+      <strong>GitHub Repository:</strong>
+      <a href="https://github.com/YOUR_REPO_URL">https://github.com/YOUR_REPO_URL</a>
+    </li>
+    <li>
+      <strong>Deployed Application:</strong>
+      <a href="https://w3stu.cs.jmu.edu/YOUR_USERNAME/cs343/project">
+        https://w3stu.cs.jmu.edu/YOUR_USERNAME/cs343/project
+      </a>
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2>Application Overview</h2>
+  <p>
+    MyGuide is a fully client-side academic planning web application designed to help students
+    organize courses, plan weekly tasks, manage notes, and track deadlines.
+    The application runs entirely in the browser and does not require account creation or a backend.
+  </p>
+
+  <hr>
+
+  <h2>Key Features & Functionality</h2>
+  <ul>
+    <li>Dashboard with quick task creation and course overview</li>
+    <li>Course pages with task categorization (assignments, quizzes, other)</li>
+    <li>Weekly planner for planning and reviewing upcoming work</li>
+    <li>Notes per course with create, edit, and delete functionality</li>
+    <li>Calendar view showing tasks by date</li>
+    <li>Profile settings stored in localStorage</li>
+    <li>Clear-all-data reset option</li>
+  </ul>
+
+  <hr>
+
+  <h2>CRUD & Data Persistence</h2>
+  <p>
+    The application uses <code>localStorage</code> to persist all user data between sessions,
+    including courses, tasks, notes, weekly plans, and profile information.
+  </p>
+  <ul>
+    <li><strong>Create:</strong> Add courses, tasks, notes, and weekly plans</li>
+    <li><strong>Read:</strong> View stored data across dashboard, calendar, and course pages</li>
+    <li><strong>Update:</strong> Edit tasks, notes, and profile information</li>
+    <li><strong>Delete:</strong> Remove tasks, notes, or reset all stored data</li>
+  </ul>
+
+  <hr>
+
+  <h2>Third-Party APIs</h2>
+  <p>
+    MyGuide interacts with external browser APIs, including:
+  </p>
+  <ul>
+    <li>
+      <strong>Web Notifications API</strong> — used to schedule reminder notifications
+      for upcoming tasks (with user permission).
+    </li>
+    <li>
+      <strong>Fetch API</strong> — demonstrated through asynchronous operations
+      and promise-based flows within the application.
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2>Client-Side JavaScript Libraries</h2>
+  <ul>
+    <li><strong>Bootstrap 5</strong> — responsive layout and UI components</li>
+    <li><strong>Date-fns</strong> — date calculations and week handling</li>
+    <li><strong>Chart.js</strong> — used earlier in development for progress visualization</li>
+  </ul>
+
+  <hr>
+
+  <h2>Responsive Design & Accessibility</h2>
+  <ul>
+    <li>Responsive layouts implemented using CSS and media queries</li>
+    <li>Mobile-friendly navigation and layouts</li>
+    <li>Semantic HTML elements used throughout</li>
+    <li>Forms include labels and accessible input patterns</li>
+    <li>Application validated with Nu Validator and WAVE (with fixes applied)</li>
+  </ul>
+
+  <hr>
+
+  <h2>Asynchronous JavaScript</h2>
+  <p>
+    The application demonstrates asynchronous JavaScript through:
+  </p>
+  <ul>
+    <li>Permission-based notification handling</li>
+    <li>Deferred task reminder scheduling</li>
+    <li>Promise-based user interactions and data flows</li>
+  </ul>
+
+  <hr>
+
+  <h2>Project Scope & Future Improvements</h2>
+  <p>
+    MyGuide is intentionally designed as a client-side-only application.
+    Future improvements could include:
+  </p>
+  <ul>
+    <li>Enhanced analytics and progress tracking</li>
+    <li>Optional backend support for multi-device sync</li>
+    <li>Improved calendar import/export features</li>
+    <li>Expanded accessibility features</li>
+  </ul>
+
+  <hr>
+
+  <h2>Notes for Graders</h2>
+  <p>
+    The <code>report.html</code> page is provided as developer documentation and is not part of the
+    user-facing interface. It summarizes how the project aligns with the CS 343 final project rubric.
+  </p>
+
+</body>
+</html>
+
+
