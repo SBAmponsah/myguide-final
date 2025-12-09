@@ -299,46 +299,11 @@ function setupQuickAdd() {
 }
 
 
-/* ---------- Study chart ---------- */
-let streakChart = null;
-function renderStudyChart() {
-  const canvas = document.getElementById('streak-chart');
-  if (!canvas) return;
-  const d = loadData();
-  // compute last 14 days study totals
-  const days = [];
-  for (let i = 13; i >= 0; i--) {
-    const date = new Date(); 
-    date.setDate(date.getDate() - i);
-    const key = date.toISOString().split('T')[0];
-    const total = (d.studyLogs || []).filter(s => s.date === key).reduce((a,b) => a + (b.minutes || 0), 0);
-    days.push({ date: key, minutes: total });
-  }
-  const labels = days.map(x => x.date.slice(5));
-  const dataPoints = days.map(x => x.minutes);
-
-  if (streakChart) { 
-    streakChart.data.labels = labels; 
-    streakChart.data.datasets[0].data = dataPoints; 
-    streakChart.update(); 
-    return; 
-  }
-
-  streakChart = new Chart(canvas, {
-    type: 'bar',
-    data: {
-      labels,
-      datasets: [{ label: 'Study minutes (last 14 days)', data: dataPoints, borderRadius: 4 }]
-    },
-    options: { responsive: true, plugins: { legend: { display: false } } }
-  });
-}
-
 /* ---------- Weekly prompt logic ---------- */
 function checkWeeklyPrompt() {
   const today = new Date();
 
-  // ✅ Safe Sunday check (no dependency)
+  //  Safe Sunday check (no dependency)
   const isSunday = today.getDay() === 0;
 
   if (!isSunday) return;
@@ -374,7 +339,7 @@ function wireDashboardButtons() {
   if (btnReqNot) btnReqNot.addEventListener('click', () => {
     requestNotificationsPermission().then(ok => alert(ok ? 'Notifications enabled' : 'Notifications denied'));
   });
-    // 🔴 Clear all data (RESET)
+    // Clear all data (RESET)
   const btnReset = document.getElementById('btn-reset-data');
 
   if (btnReset) {
@@ -384,7 +349,7 @@ function wireDashboardButtons() {
       );
       if (!ok) return;
 
-      clearAllData();   // ✅ YOU ALREADY HAVE THIS FUNCTION
+      clearAllData();   // YOU ALREADY HAVE THIS FUNCTION
       alert('All data cleared.');
       location.reload();
     });
@@ -602,7 +567,7 @@ if (profileForm) {
 
   const d = loadData();
 
-  // ✅ Load saved data
+  //  Load saved data
   nameInput.value = d.meta?.username || '';
   yearInput.value = d.meta?.classYear || '';
   schoolInput.value = d.meta?.school || '';
@@ -618,22 +583,21 @@ if (profileForm) {
     data.meta.school = schoolInput.value.trim();
 
     saveData(data);
-    alert('Profile saved ✅');
+    alert('Profile saved ');
   });
 }
 
 });
-// ✅ REAL THIRD-PARTY API INTEGRATION
+//  REAL THIRD-PARTY API INTEGRATION
 // Fetch a motivational quote for students
-// ✅ REAL THIRD-PARTY API INTEGRATION (RANDOM)
-// ✅ REAL THIRD-PARTY API INTEGRATION (RANDOM)
+//  REAL THIRD-PARTY API INTEGRATION (RANDOM)
 function loadMotivationalQuote() {
   const quoteText = document.getElementById("quote-text");
   const quoteAuthor = document.getElementById("quote-author");
 
   if (!quoteText || !quoteAuthor) return;
 
-  // ✅ Fallback quotes (still random)
+  //  Fallback quotes (still random)
   const fallbackQuotes = [
     { q: "Discipline beats motivation.", a: "Unknown" },
     { q: "Small progress every day adds up.", a: "MyGuide" },
@@ -659,5 +623,5 @@ function loadMotivationalQuote() {
     });
 }
 
-// ✅ Load once per page load (random every refresh)
+//  Load once per page load (random every refresh)
 document.addEventListener("DOMContentLoaded", loadMotivationalQuote);

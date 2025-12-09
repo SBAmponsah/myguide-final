@@ -343,6 +343,22 @@ function deleteTask(taskId){
   }
 
   /* ---------- Weekly planner ---------- */
+//  Wire Save & Apply button safely (DEFINE FIRST)
+function wireSaveWeek() {
+  const btn = document.getElementById('btn-save-week');
+  if (!btn) {
+    console.warn('Save & Apply button not found');
+    return;
+  }
+
+  // prevent double-binding
+  if (btn.dataset.bound === 'true') return;
+
+  btn.addEventListener('click', saveAndArchiveWeek);
+  btn.dataset.bound = 'true';
+
+  console.log(' Save & Apply button wired');
+}
 
   function openPlanner(){
     if (!plannerPage || !plannerWeekStart) return;
@@ -362,6 +378,7 @@ function deleteTask(taskId){
     plannerWeekStart.value = sunday.toISOString().split('T')[0];
     renderPlannerGrid();
     renderArchivedWeeks();
+    wireSaveWeek(); 
   }
 
   function closePlanner(){ 
@@ -640,6 +657,58 @@ if (typeof requestNotificationsPermission === 'function' &&
     plannerGrid.appendChild(col);
   }
 }
+function saveAndArchiveWeek() {
+  console.log(' Save & Apply clicked');
+  if (!plannerWeekStart || !plannerWeekStart.value) {
+    alert('Pick a week start date first.');
+    return;
+  }
+
+  const weekStart = plannerWeekStart.value;
+
+  course.weeklyPlans = course.weeklyPlans || [];
+  course.archivedWeeks = course.archivedWeeks || [];
+
+  const index = course.weeklyPlans.findIndex(
+    w => w.weekStart === weekStart
+  );
+
+  if (index === -1) {
+    alert('No planned items to save.');
+    return;
+  }
+
+  const week = course.weeklyPlans[index];
+
+  if (!week.items || week.items.length === 0) {
+    alert('This week has no items.');
+    return;
+  }
+
+  //  Archive it
+  course.archivedWeeks.push({
+    weekStart,
+    items: week.items.slice(),
+    archivedAt: new Date().toISOString()
+  });
+
+  //  Remove it from active planner
+  course.weeklyPlans.splice(index, 1);
+
+  saveData(data);
+
+  alert('Week saved & archived ');
+
+  /** RESET PLANNER TO NEXT WEEK **/
+  const oldDate = new Date(weekStart);
+  oldDate.setDate(oldDate.getDate() + 7);
+  plannerWeekStart.value = oldDate.toISOString().split('T')[0];
+
+  // Re-render clean state
+  renderPlannerGrid();
+  renderArchivedWeeks();
+}
+
 
   function renderArchivedWeeks(){
     if (!archivedWeeksList) return;
@@ -683,6 +752,14 @@ if (typeof requestNotificationsPermission === 'function' &&
     if (btnPlanWeek) btnPlanWeek.addEventListener('click', openPlanner);
     if (btnNewNote) btnNewNote.addEventListener('click', ()=> openNoteEditor(null,false));
     if (btnCloseWeek) btnCloseWeek.addEventListener('click', closePlanner);
+function wireSaveWeek() {
+  const btn = document.getElementById('btn-save-week');
+  if (btn && !btn.dataset.bound) {
+    btn.addEventListener('click', saveAndArchiveWeek);
+    btn.dataset.bound = 'true';
+  }
+}
+
 
     
   }
